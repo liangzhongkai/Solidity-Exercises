@@ -11,6 +11,15 @@ contract CrossContract {
         address _priceOracle2
     ) external view returns (uint256) {
         // your code here
+        // uint256 price1 = PriceOracle1(_priceOracle1).price();
+        // uint256 price2 = PriceOracle2(_priceOracle2).price();
+        (bool success, bytes memory data) = _priceOracle1.staticcall(abi.encodeWithSelector(PriceOracle1.price.selector));
+        require(success, "PriceOracle1.price failed");
+        uint256 price1 = abi.decode(data, (uint256));
+        (success, data) = _priceOracle2.staticcall(abi.encodeWithSelector(PriceOracle2.price.selector));
+        require(success, "PriceOracle2.price failed");
+        uint256 price2 = abi.decode(data, (uint256));
+        return price1 < price2 ? price1 : price2;
     }
 }
 

@@ -7,5 +7,7 @@ contract NotEnough {
     else it reverts. */
     function largeEnough(uint256 _number) external pure {
         // add code here
+        require(_number > 10, "Number is not large enough");
+        return;
     }
 }

@@ -15,5 +15,17 @@ contract DistributeV2 {
 
     function distributeEther(address[] memory addresses) public {
         // your code here
+        require(addresses.length > 0, "Addresses array cannot be empty");
+        uint256 totalAmount = address(this).balance;
+        uint256 amountPerAddress = totalAmount / addresses.length;
+        for (uint256 i = 0; i < addresses.length; i++) {
+            require(addresses[i] != address(this), "Cannot send to self");
+            // unchecked {
+                (bool success, ) = payable(addresses[i]).call{value: amountPerAddress}("");
+                if (!success) {
+                    continue;
+                }
+            // }
+        }
     }
 }
